@@ -1,1 +1,23 @@
+Plan - Visualisation Tool for Sorting Algorithms
 
+DESIGN LOGIC:
+Rather than generating each list of numbers for the stage of the sort in situ, the program will complete the entire sort, storing the stages in a large array. This array will be the frames that will then be viewed in the display.
+
+INTERFACE AESTHETICS:
+A menu bar (plain background) at the left hand side.
+A display area (space background) to the right hand side.
+Menu:
+1. Title Section at the top.
+2. Three buttons to select the sort.
+3. A slider to select the number of elements to be sorted (50-500).
+4. A slider to select the range of numbers (1-100) with two circles to represent the upper and lower bound.
+5. A play/pause button.
+6. A reset button.
+Display:
+1. White rectangles to represent the numbers being sorted.
+2. A space background.
+
+PROGRAM ARCHITECTURE:
+1. main.py - handles the main logic of the program and visualisation, is the executable.
+2. sort_modules.py - handles the sort logic and returns the array of frames.
+3. ui_modules.py - handles aspects to do with user interface e.g. is the mouse over a button or not.
