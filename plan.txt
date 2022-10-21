@@ -21,3 +21,5 @@ PROGRAM ARCHITECTURE:
 1. main.py - handles the main logic of the program and visualisation, is the executable.
 2. sort_modules.py - handles the sort logic and returns the array of frames.
 3. ui_modules.py - handles aspects to do with user interface e.g. is the mouse over a button or not.
+
+check
