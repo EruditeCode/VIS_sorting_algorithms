@@ -17,9 +17,9 @@ def main():
 	WINDOW_HEIGHT = 400
 	WINDOW_WIDTH = 800
 	sort_choice = "bubble"
-	number_elements = 50
+	number_elements = 100
 	range_min = 1
-	range_max = 10
+	range_max = 50
 	play = False
 	sort = False
 	frames = []
@@ -39,8 +39,12 @@ def main():
 	quick = pygame.Surface((30, 30))
 	heap = pygame.Surface((30, 30))
 
+	# Button for play.
+	play_btn = pygame.Surface((60, 30))
+	play_btn.fill("white")
 
-	
+
+	count = 0
 	while True:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -56,6 +60,15 @@ def main():
 						sort_choice = "quick"
 					if in_rect(mouse_pos, 30, 60, 180, 210):
 						sort_choice = "heap"
+					if in_rect(mouse_pos, 30, 90, 320, 350):
+						play = True
+				if event.button == 1 and play == True:
+					if in_rect(mouse_pos, 30, 90, 320, 350):
+						count = 0
+						sort = False
+						play = False
+						frames = []
+						array = [randint(range_min, range_max + 1) for i in range(number_elements)]
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
@@ -79,10 +92,17 @@ def main():
 		screen.blit(quick, (30, 140))
 		screen.blit(heap, (30, 180))
 
+		screen.blit(play_btn, (30, 320))
+
 		if play == True:
 			if sort == True:
-				# Display the frames.
-				pass
+				x = (WINDOW_WIDTH - 180) // len(array)
+				MAX_NUM = max(array)
+				for index, element in enumerate(frames[count]):
+					ob_height = (element / MAX_NUM) * (WINDOW_HEIGHT - 50)
+					pygame.draw.rect(screen, 'White', pygame.Rect(180 + (index * x), WINDOW_HEIGHT - ob_height, x - 2, ob_height))
+				if count < len(frames) - 1:
+					count += 1
 			else:
 				frames = run_sort(array, sort_choice, frames)
 				sort = True
@@ -96,11 +116,24 @@ def in_rect(position, x_min, x_max, y_min, y_max):
 	return False
 
 def reset():
+	count = 0
 	sort = False
 	frames = []
 
 def run_sort(array, sort_choice, frames):
-	pass
+	if sort_choice == "bubble":
+		frames = [array.copy()]
+		sort = False
+		while sort == False:
+			sort = True
+			# Iterate through the list of numbers and compare pairs.
+			for i in range(0, len(array) - 1):
+				if array[i] > array[i + 1]:
+					array[i], array[i + 1] = array[i + 1], array[i]
+					sort = False
+					frames.append(array.copy())
+		return frames
+
 
 
 if __name__ == "__main__":
