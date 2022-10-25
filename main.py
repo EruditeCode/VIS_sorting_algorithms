@@ -9,6 +9,8 @@ import pygame
 from random import randint
 from sys import exit
 
+pivots = []
+
 
 def main():
 	pygame.init()
@@ -66,7 +68,6 @@ def main():
 					if in_rect(mouse_pos, 30, 90, 320, 350):
 						count = 0
 						sort = False
-						play = False
 						frames = []
 						array = [randint(range_min, range_max + 1) for i in range(number_elements)]
 
@@ -96,11 +97,11 @@ def main():
 
 		if play == True:
 			if sort == True:
-				x = (WINDOW_WIDTH - 180) // len(array)
+				x = (WINDOW_WIDTH - 182) / len(array)
 				MAX_NUM = max(array)
 				for index, element in enumerate(frames[count]):
 					ob_height = (element / MAX_NUM) * (WINDOW_HEIGHT - 50)
-					pygame.draw.rect(screen, 'White', pygame.Rect(180 + (index * x), WINDOW_HEIGHT - ob_height, x - 2, ob_height))
+					pygame.draw.rect(screen, 'White', pygame.Rect(182 + (index * x), WINDOW_HEIGHT - ob_height, x - 2, ob_height))
 				if count < len(frames) - 1:
 					count += 1
 			else:
@@ -133,7 +134,49 @@ def run_sort(array, sort_choice, frames):
 					sort = False
 					frames.append(array.copy())
 		return frames
+	elif sort_choice == "quick":
+		initial_array = array.copy()
+		frames.append(initial_array)
+		array = quick_sort(array)
+		# Use pivots to generate frames.
+		# NEED TO IMPROVE LOGIC FOR EACH COMPARISON FRAME.
+		for pivot in pivots:
+			low, same, high = [], [], []
+			for value in frames[-1]:
+				if value < pivot:
+					low.append(value)
+				elif value == pivot:
+					same.append(value)
+				elif value > pivot:
+					high.append(value)
+			frame = low + same + high
+			frames.append(frame)
+		return frames
 
+
+	elif sort_choice == "heap":
+		pass
+
+
+def quick_sort(array):
+	if len(array) <= 1:
+		return array
+
+	pivot_index = randint(0, len(array) - 1)
+	pivot = array[pivot_index]
+	pivots.append(pivot)
+
+	lesser, same, greater = [], [], []
+
+	for element in array:
+		if element == pivot:
+			same.append(element)
+		elif element < pivot:
+			lesser.append(element)
+		elif element > pivot:
+			greater.append(element)
+
+	return quick_sort(lesser) + same + quick_sort(greater)
 
 
 if __name__ == "__main__":
