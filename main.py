@@ -10,6 +10,7 @@ from random import randint
 from sys import exit
 
 pivots = []
+frames = []
 
 
 def main():
@@ -24,7 +25,7 @@ def main():
 	range_max = 50
 	play = False
 	sort = False
-	frames = []
+	#frames = []
 	array = [randint(range_min, range_max + 1) for i in range(number_elements)]
 
 	screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -152,10 +153,12 @@ def run_sort(array, sort_choice, frames):
 			frame = low + same + high
 			frames.append(frame)
 		return frames
-
-
 	elif sort_choice == "heap":
-		pass
+		frames.append(array.copy())
+		array, batch = heap_sort(array)
+		for item in batch:
+			frames.append(item)
+		return frames
 
 
 def quick_sort(array):
@@ -177,6 +180,37 @@ def quick_sort(array):
 			greater.append(element)
 
 	return quick_sort(lesser) + same + quick_sort(greater)
+
+def tidy_heap(heap, index):
+	LEFT = (2 * index) + 1
+	RIGHT = (2 * index) + 2
+
+	large = index
+	if LEFT < len(heap) and heap[large] < heap[LEFT]:
+		large = LEFT
+	if RIGHT < len(heap) and heap[large] < heap[RIGHT]:
+		large = RIGHT
+
+	if large != index:
+		heap[index], heap[large] = heap[large], heap[index]
+		tidy_heap(heap, large)
+	return heap
+
+def heap_sort(array):
+	batch = []
+	sort_array = []
+	heap = array.copy()
+	while heap:
+		# Create the max heap.
+		for i in range((len(heap)//2)-1, -1, -1):
+			tidy_heap(heap, i)
+
+		# Storing the max value in the sort array.
+		sort_array.insert(0, heap[0])
+		heap[0], heap[-1] = heap[-1], heap[0]
+		heap.pop(-1)
+		batch.append(heap + sort_array)
+	return sort_array, batch
 
 
 if __name__ == "__main__":
