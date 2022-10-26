@@ -10,11 +10,8 @@ The sort_object.frames is the iterable for each frame.
 
 import pygame
 from random import randint
-from sort_modules import quick_sort, heap_sort
+from sort_modules import Sort
 from sys import exit
-
-pivots = []
-frames = []
 
 
 def main():
@@ -70,10 +67,10 @@ def main():
 						play = True
 				if event.button == 1 and play == True:
 					if in_rect(mouse_pos, 30, 90, 320, 350):
+						array = [randint(range_min, range_max + 1) for i in range(number_elements)]
 						count = 0
 						sort = False
-						frames = []
-						array = [randint(range_min, range_max + 1) for i in range(number_elements)]
+						sort_obj = Sort(array, sort_choice)
 
 		# Displaying the background surface.
 		screen.blit(bg, (0, 0))
@@ -103,13 +100,14 @@ def main():
 			if sort == True:
 				x = (WINDOW_WIDTH - 182) / len(array)
 				MAX_NUM = max(array)
-				for index, element in enumerate(frames[count]):
+				for index, element in enumerate(sort_obj.frames[count]):
 					ob_height = (element / MAX_NUM) * (WINDOW_HEIGHT - 50)
 					pygame.draw.rect(screen, 'White', pygame.Rect(182 + (index * x), WINDOW_HEIGHT - ob_height, x - 2, ob_height))
-				if count < len(frames) - 1:
+				if count < len(sort_obj.frames) - 1:
 					count += 1
 			else:
-				frames = run_sort(array, sort_choice, frames)
+				sort_obj = Sort(array, sort_choice)
+				sort_obj.run_sort()
 				sort = True
 
 		pygame.display.update()
@@ -119,48 +117,6 @@ def in_rect(position, x_min, x_max, y_min, y_max):
 	if (x_min < position[0] < x_max) and (y_min < position[1] < y_max):
 		return True
 	return False
-
-def reset():
-	count = 0
-	sort = False
-	frames = []
-
-def run_sort(array, sort_choice, frames):
-	if sort_choice == "bubble":
-		frames = [array.copy()]
-		sort = False
-		while sort == False:
-			sort = True
-			# Iterate through the list of numbers and compare pairs.
-			for i in range(0, len(array) - 1):
-				if array[i] > array[i + 1]:
-					array[i], array[i + 1] = array[i + 1], array[i]
-					sort = False
-					frames.append(array.copy())
-		return frames
-	elif sort_choice == "quick":
-		frames = [array.copy()]
-		array = quick_sort(array)
-		# Use pivots to generate frames.
-		# NEED TO IMPROVE LOGIC FOR EACH COMPARISON FRAME.
-		for pivot in pivots:
-			low, same, high = [], [], []
-			for value in frames[-1]:
-				if value < pivot:
-					low.append(value)
-				elif value == pivot:
-					same.append(value)
-				elif value > pivot:
-					high.append(value)
-			frame = low + same + high
-			frames.append(frame)
-		return frames
-	elif sort_choice == "heap":
-		frames = [array.copy()]
-		array, batch = heap_sort(array)
-		for item in batch:
-			frames.append(item)
-		return frames
 
 
 if __name__ == "__main__":
