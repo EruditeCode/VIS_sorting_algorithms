@@ -1,9 +1,10 @@
 from random import randint
 
 class Sort:
-	def __init__(self, array, sort_choice):
+	def __init__(self, array, choice):
 		self.array = array
-		self.choice = sort_choice
+		self.choice = choice
+		self.status = False
 		self.frames = [array.copy()]
 		self.item_log = []
 
@@ -14,6 +15,7 @@ class Sort:
 			self.quick_sort_frames(self.array)
 		elif self.choice == "heap":
 			self.heap_sort_frames(self.array)
+		self.status = True
 
 	def bubble_sort_frames(self, array):
 		sort = False
