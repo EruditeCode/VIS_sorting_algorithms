@@ -40,20 +40,6 @@ class Sort:
 					high.append(value)
 			self.frames.append(low + same + high)
 
-	def heap_sort_frames(self, array):
-		sort_array = []
-		heap = array.copy()
-		while heap:
-			# Create the max heap.
-			for i in range((len(heap)//2)-1, -1, -1):
-				self.tidy_heap(heap, i)
-
-			# Storing the max value in the sort array.
-			sort_array.insert(0, heap[0])
-			heap[0], heap[-1] = heap[-1], heap[0]
-			heap.pop(-1)
-			self.frames.append(heap + sort_array)
-
 	def quick_sort(self, array):
 		if len(array) <= 1:
 			return array
@@ -73,7 +59,21 @@ class Sort:
 
 		return self.quick_sort(lesser) + same + self.quick_sort(greater)
 
-	def tidy_heap(self, heap, index):
+	def heap_sort_frames(self, array):
+		sort_array = []
+		heap = array.copy()
+		while heap:
+			# Create the max heap.
+			for i in range((len(heap)//2)-1, -1, -1):
+				self.tidy_heap(heap, i, sort_array)
+
+			# Storing the max value in the sort array.
+			sort_array.insert(0, heap[0])
+			heap[0], heap[-1] = heap[-1], heap[0]
+			heap.pop(-1)
+		self.frames.append(heap + sort_array)
+
+	def tidy_heap(self, heap, index, sort_array):
 		LEFT = (2 * index) + 1
 		RIGHT = (2 * index) + 2
 
@@ -85,5 +85,6 @@ class Sort:
 
 		if large != index:
 			heap[index], heap[large] = heap[large], heap[index]
-			self.tidy_heap(heap, large)
+			self.frames.append(heap + sort_array)
+			self.tidy_heap(heap, large, sort_array)
 		return heap
