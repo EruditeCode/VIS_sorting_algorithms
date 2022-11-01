@@ -10,9 +10,8 @@ Menu:
 1. Title Section at the top.
 2. Three buttons to select the sort.
 3. A slider to select the number of elements to be sorted (50-500).
-4. A slider to select the range of numbers (1-100) with two circles to represent the upper and lower bound.
-5. A play/pause button.
-6. A reset button.
+4. A play/pause button.
+5. A reset button.
 Display:
 1. White rectangles to represent the numbers being sorted.
 2. A space background.
@@ -20,6 +19,4 @@ Display:
 PROGRAM ARCHITECTURE:
 1. main.py - handles the main logic of the program and visualisation, is the executable.
 2. sort_modules.py - handles the sort logic and returns the array of frames.
-3. ui_modules.py - handles aspects to do with user interface e.g. is the mouse over a button or not.
-
-check
+3. nav_modules.py - handles navigation and position checking functions.
