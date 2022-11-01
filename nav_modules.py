@@ -1,4 +1,4 @@
-# Navigation functions to support the Visual Sorts program.
+# Navigation and position check functions to support the Visual Sorts program.
 
 def in_rect(position, x_min, x_max, y_min, y_max):
 	if (x_min < position[0] < x_max) and (y_min < position[1] < y_max):
