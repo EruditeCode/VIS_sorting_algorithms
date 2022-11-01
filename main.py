@@ -1,18 +1,17 @@
 """
-Visualisation of Sorting Algorithms
------------------------------------
-
-Dependencies, Function, Properties
-Update this with classes e.g. a sort class
-that accepts min, max and number of elements.
-The sort_object.frames is the iterable for each frame.
+Visual Sorts
+------------
+A program for the visualisation of sorting algorithms.
+The UI will allow a user to select a specific sort, and
+the number of elements to be sorted. The sort animation
+can be paused and reset with the respective buttons.
 """
 
 import pygame
 from random import randint
 from sort_modules import Sort
+from nav_modules import in_rect, in_circle
 from sys import exit
-
 
 def main():
 	pygame.init()
@@ -67,7 +66,7 @@ def main():
 	swapsRect = swaps_txt.get_rect(topleft=(680,10))
 
 	# Initialising a sort object.
-	array = [randint(1, 101) for i in range(elements)]
+	array = [randint(1, 100) for i in range(elements)]
 	sort_obj = Sort(array, choice)
 
 	count = 0
@@ -84,9 +83,9 @@ def main():
 					# Check each sort button.
 					if in_rect(mouse_pos, 25, 55, 80, 110):
 						choice = "bubble"
-					if in_rect(mouse_pos, 25, 55, 120, 150):
+					elif in_rect(mouse_pos, 25, 55, 120, 150):
 						choice = "quick"
-					if in_rect(mouse_pos, 25, 55, 160, 190):
+					elif in_rect(mouse_pos, 25, 55, 160, 190):
 						choice = "heap"
 
 					# Check the number of elements slider.
@@ -96,8 +95,8 @@ def main():
 					# Check the play and reset buttons.
 					if in_rect(mouse_pos, 55, 125, 350, 380):
 						play = True
-					if in_rect(mouse_pos, 55, 125, 310, 340):
-						array = [randint(1, 101) for i in range(elements)]
+					elif in_rect(mouse_pos, 55, 125, 310, 340):
+						array = [randint(1, 100) for i in range(elements)]
 						count = 0
 						sort_obj = Sort(array, choice)
 
@@ -109,17 +108,6 @@ def main():
 			if event.type == pygame.MOUSEBUTTONUP:
 				if event.button == 1:
 					mouse_sticky = False
-
-
-		if mouse_sticky == True:
-			mouse_pos = pygame.mouse.get_pos()
-			if mouse_pos[0] > 137:
-				circle_pos = (137, 266)
-			elif mouse_pos[0] < 42:
-				circle_pos = (42, 266)
-			else:
-				circle_pos = (mouse_pos[0], 266)
-			elements = ((circle_pos[0] - 42) * 2) + 10
 
 		# Displaying the background menu and display surfaces.
 		screen.blit(menu, (0, 0))
@@ -142,11 +130,11 @@ def main():
 		screen.blit(play_btn, (55, 350))
 
 		# Displaying the slider widget.
-		circle_pos_x = 42 + (elements - 10) // 2
-		circle_pos = (circle_pos_x, 266)
+		circle_pos = ((42 + (elements - 10) // 2), 266)
 		pygame.draw.line(screen, (255, 255, 255), (42,265), (137,265), 4)
 		pygame.draw.circle(screen, (0, 86, 62), circle_pos, 7)
 
+		# Displaying the initial blocks for sorting and updating the animation.
 		x = (WINDOW_WIDTH - 182) / len(array)
 		MAX_NUM = max(array)
 		if play == True:
@@ -165,6 +153,16 @@ def main():
 			for index, element in enumerate(sort_obj.frames[count]):
 				ob_height = (element / MAX_NUM) * (WINDOW_HEIGHT - 50)
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(182 + (index * x), WINDOW_HEIGHT - ob_height, x - 2, ob_height))
+
+		# Updating the number of elements if the mouse is over the slider.
+		if mouse_sticky == True:
+			mouse_pos = pygame.mouse.get_pos()
+			if mouse_pos[0] > 137:
+				elements = 200
+			elif mouse_pos[0] < 42:
+				elements = 10
+			else:
+				elements = ((mouse_pos[0] - 42) * 2) + 10
 
 		# Create the dynamic text for number of elements and swaps.
 		elements_txt = txt_font.render(f"Elements: {elements}", True, (255, 255, 255))
@@ -188,23 +186,6 @@ def main():
 
 		pygame.display.update()
 		clock.tick(15)
-
-def in_rect(position, x_min, x_max, y_min, y_max):
-	if (x_min < position[0] < x_max) and (y_min < position[1] < y_max):
-		return True
-	return False
-
-def in_circle(point, circle_centre, circle_radius):
-	if euclidean_distance(point, circle_centre) <= circle_radius:
-		return True
-	return False
-	
-def euclidean_distance(point_1, point_2):
-	s = 0.0
-	for i in range(len(point_1)):
-		s += ((point_1[i] - point_2[i]) ** 2)
-	return s ** 0.5
-
 
 if __name__ == "__main__":
 	main()
